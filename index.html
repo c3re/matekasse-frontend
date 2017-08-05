@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Matekasse</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="css/font.css" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+
+</head>
+<body>
+	<script>
+		const c = document.getElementById('container');
+		const url = 'http://matekasse/getallusers';
+		let users = 0;
+		var currentrow = null;
+
+		function addUser(name, id) {
+			users++;
+			var userdiv = document.getElementById("users");
+			if(users % 4 == 1) {
+				console.log("new row");
+				currentrow = document.createElement("div");
+				currentrow.className = "row";
+				userdiv.appendChild(currentrow);
+				space = document.createElement("br");
+				userdiv.appendChild(space);
+			}
+			
+
+			var link = document.createElement('a');
+			link.href = "bezahlen.html?id=" + id;
+
+			var three_columns = document.createElement('div');
+			three_columns.className = "three columns";
+
+			var card = document.createElement('div');
+			card.className = "card";
+
+			var img = document.createElement('img');
+			img.src="images/img_avatar.png";
+			img.alt="Avatar";
+			img.style="width:100%";
+
+			var container_ch = document.createElement('div')
+			container_ch.className = "container-ch";
+
+			var ch = document.createElement('ch');
+			var text = document.createTextNode(name);
+
+			ch.appendChild(text);
+			container_ch.appendChild(ch);
+			card.appendChild(img);
+			card.appendChild(container_ch);
+			link.appendChild(card);
+			three_columns.appendChild(link);
+
+			currentrow.appendChild(three_columns);
+			console.log("Name: ", name, "ID: ", id);
+		}
+
+		  function createNode(element) {
+		    return document.createElement(element);
+		  }
+
+  		function append(parent, el) {
+		    return parent.appendChild(el);
+		  }
+
+		fetch(url)
+		.then(res => res.json())
+		.then(function(data) {
+			return data.map(function(account) {
+				addUser(account.name, account.id);
+			})
+		})
+		.catch(err => console.error(err));
+	</script>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<div class="container">
+	<div class="row">
+		<div class="all column" style="margin-top:3%">
+			<h1>Matekasse</h1>
+		</div>
+	</div>
+
+	<div id="users">
+	</div>
+
+
+</div>
+  
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>

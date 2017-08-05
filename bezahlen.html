@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Matekasse</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="css/font.css" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+	<script>
+		var countdown;
+		var apiurl = "http://matekasse/";
+		let url = new URL(document.URL);
+		let searchParams = new URLSearchParams(url.search);
+		console.log("ID:", searchParams.get('id'));  
+		var id = searchParams.get('id');
+
+		window.onload = init;
+
+		function init() {
+			setFields("get/".concat(id));
+			setLinks(id);
+			countdown = 15;
+			setInterval(timer, 1000);
+		}
+
+		function timer() {
+			countdown--;
+			if (countdown <= 0) {
+				window.location.href = "index.html";
+			}
+		}
+
+		function setHeading(name) {
+			var h1 = document.getElementById('heading');
+			while (h1.firstChild) {
+			    h1.removeChild(h1.firstChild);
+			}
+			var text = document.createTextNode("Matekasse // ".concat(name));
+			h1.appendChild(text);
+		}
+
+		function setBalance(amount) {
+			var b = document.getElementById('balance');
+			while (b.firstChild) {
+			    b.removeChild(b.firstChild);
+			}
+			var euro = (amount / 100);
+			euro = amount / 100;
+			var text = document.createTextNode("".concat(euro.toFixed(2)).concat("€"));
+			if (euro < 0) {
+				b.style.color = "red";
+			} else {
+				b.style.color = null;
+			}
+			b.style.fontWeight = "bold";
+			b.appendChild(text);
+		}
+
+		function setLinks(id) {
+			link50 = document.getElementById('link_50');
+			link50.href = 'javascript:setFields("set/".concat(id).concat("/-50"))';
+			link100 = document.getElementById('link_100');
+			link100.href = 'javascript:setFields("set/".concat(id).concat("/-100"))';
+			link150 = document.getElementById('link_150');
+			link150.href = 'javascript:setFields("set/".concat(id).concat("/-150"))';
+			link500 = document.getElementById('link_500');
+			link500.href = 'javascript:setFields("set/".concat(id).concat("/+500"))';
+			link1000 = document.getElementById('link_1000');
+			link1000.href = 'javascript:setFields("set/".concat(id).concat("/+1000"))';
+			link2000 = document.getElementById('link_2000');
+			link2000.href = 'javascript:setFields("set/".concat(id).concat("/+2000"))';
+		}
+
+		function setFields(request) {
+			console.log("Trying to get:", apiurl.concat(request));
+			fetch(apiurl.concat(request))
+			.then(res => res.json())
+			.then(
+				function(data){
+					setHeading(data.name);
+					setBalance(data.balance);
+				},
+				function(){
+					console.log("fail")
+				}
+			)
+			.catch(err => console.error(err));
+			countdown = 5;
+		}
+	</script>
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<div class="container">
+	<div class="row">
+		<div class="all column" style="margin-top:3%">
+			<h1 id="heading"></h1>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="four columns">
+			<a id="link_150">
+				 <div class="card">
+					<img src="images/mate05.jpg" alt="1,50 Euro" style="width:100%">
+					<div class="container-ch">
+						<ch>1,50 €</ch>
+					</div>
+				</div> 
+			</a>
+		</div>
+		<div class="four columns">
+			<a id="link_100">
+				<div class="card">
+					<img src="images/fritzkola03.jpg" alt="1,00 Euro" style="width:100%">
+					<div class="container-ch">
+						<ch>1,00 €</ch>
+					</div>
+				</div> 
+			</a>
+		</div>
+		<div class="four columns">
+			<a id="link_50">
+				 <div class="card">
+					<img src="images/snickers.jpg" alt="0,50 Euro" style="width:100%">
+					<div class="container-ch">
+						<ch>0,50 €</ch>
+					</div>
+				</div> 
+			</a>
+		</div>
+	</div>
+	<div class="row">
+		<br>
+	</div>
+	<div class="row">
+		<br>
+	</div>
+	<div class="row">
+		<div class="four columns">
+			<a id="link_500">
+				 <div class="moneycard">
+					<img src="images/5euroschein.jpg" alt="5 Euro" style="width:100%">
+				</div> 
+			</a>
+		</div>
+		<div class="four columns">
+			<a id="link_1000">
+				 <div class="moneycard">
+					<img src="images/10euroschein.jpg" alt="10 Euro" style="width:100%">
+				</div> 
+			</a>
+		</div>
+		<div class="four columns">
+			<a id="link_2000">
+				 <div class="moneycard">
+					<img src="images/20euroschein.jpg" alt="20 Euro" style="width:100%">
+				</div> 
+			</a>
+		</div>
+	</div>
+</div>
+<div class="bottom-bar">
+	<h3>Guthaben: <nobr id="balance" ></nobr></h3>
+</div>
+  
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
