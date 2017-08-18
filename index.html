@@ -29,6 +29,23 @@
 		const url = 'http://api.matekasse/getallusers';
 		let users = 0;
 		var currentrow = null;
+		
+		function setBalance(amount) {
+			var b = document.getElementById('balance');
+			while (b.firstChild) {
+			    b.removeChild(b.firstChild);
+			}
+			var euro = (amount / 100);
+			euro = amount / 100;
+			var text = document.createTextNode("".concat(euro.toFixed(2)).concat("€"));
+			if (euro < 0) {
+				b.style.color = "red";
+			} else {
+				b.style.color = null;
+			}
+			b.style.fontWeight = "bold";
+			b.appendChild(text);
+		}
 
 		function addUser(name, id) {
 			users++;
@@ -90,6 +107,20 @@
 			})
 		})
 		.catch(err => console.error(err));
+
+
+		fetch('http://api.matekasse/sum')
+		.then(res => res.json())
+		.then(
+			function(data){
+				setBalance(data.sum);
+			},
+			function(){
+				console.log("fail")
+			}
+		)
+		.catch(err => console.error(err));
+
 	</script>
 
   <!-- Primary Page Layout
@@ -105,6 +136,10 @@
 	</div>
 
 
+</div>
+
+<div class="bottom-bar">
+	<h3>Gesamtsumme: <nobr id="balance" ></nobr></h3>
 </div>
   
 <!-- End Document
